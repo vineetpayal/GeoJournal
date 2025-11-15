@@ -81,8 +81,14 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.0")
 
     // Google Maps for Compose
-    implementation("com.google.maps.android:maps-compose:4.4.1")
+//    implementation("com.google.maps.android:maps-compose:4.4.1")
 
     // Coil - For loading photos
     implementation("io.coil-kt:coil-compose:2.6.0")
+
+    // for map view
+    implementation("org.osmdroid:osmdroid-android:6.1.20")
+    // ADDED:
+    // ADD THIS - THIS IS THE CORRECT LIBRARY
+    implementation("tech.utsmankece:osm-android-compose:0.0.5")
 }
