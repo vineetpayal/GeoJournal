@@ -2,9 +2,11 @@ package com.vineet.geojournal.ui.addentry
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
+import android.util.Log
 import androidx.core.location.LocationManagerCompat.isLocationEnabled
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -41,7 +43,21 @@ class AddEntryViewModel @Inject constructor(
     }
 
     fun onPhotoSelected(uri: Uri?) {
-        _selectedPhotoUri.value = uri
+        uri?.let {
+            try {
+                // CRITICAL: Take persistable URI permission
+                // This allows the app to access the URI even after restart
+                context.contentResolver.takePersistableUriPermission(
+                    it,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+                _selectedPhotoUri.value = it
+            } catch (e: SecurityException) {
+                // Handle the case where permission cannot be taken
+                e.printStackTrace()
+                _selectedPhotoUri.value = it
+            }
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -61,7 +77,7 @@ class AddEntryViewModel @Inject constructor(
                 latitude = location.latitude,
                 longitude = location.longitude
             )
-
+            Log.d("Uri_check", "saveEntry: " + selectedPhotoUri.value?.toString())
             //save to database
             journalRepository.addEntry(newEntry)
 
